@@ -101,8 +101,8 @@ export class PostsService {
 
   async update({ id, title, content }: UpdatePostDto): Promise<Post> {
     const mutation = `
-      mutation($id: Int!, $title: String!, $content: String!) {
-        updatePost(id: $id, title: $title, content: $content) {
+      mutation UpdatePost($updatePostInput: UpdatePostInput!){
+        updatePost(updatePostInput: $updatePostInput) {
           id
           title
           content
@@ -110,7 +110,13 @@ export class PostsService {
         }
       }
     `
-    const variables = { id, title, content }
+    const variables = { 
+      updatePostInput: {
+        id, 
+        title, 
+        content 
+      }
+    }
 
     const response = await lastValueFrom(
       this.httpService.post<{
@@ -123,9 +129,7 @@ export class PostsService {
       })
     )
 
-    const updatedPost = response.data.data.updatePost
-
-    return updatedPost
+    return response.data.data.updatePost
   }
 
   async remove(id: number): Promise<void> {

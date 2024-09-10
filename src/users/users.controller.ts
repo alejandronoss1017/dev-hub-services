@@ -12,30 +12,29 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @GrpcMethod('UsersService', 'Create')
-  create(data: CreateUserDto): User {
-    return this.usersService.create(data)
+  async create(data: CreateUserDto): Promise<User> {
+    return await this.usersService.create(data)
   }
 
   @GrpcMethod('UsersService', 'FindAll')
-  findAll(): Users {
-    return {
-      users: this.usersService.findAll()
-    }
+  async findAll(): Promise<Users> {
+    const users = await this.usersService.findAll()
+    return { users }
   }
 
   @GrpcMethod('UsersService', 'FindOne')
-  findOne({ id }: UserById): User {
-    return this.usersService.findOne(id)
+  async findOne({ id }: UserById): Promise<User> {
+    return await this.usersService.findOne(id)
   }
 
   @GrpcMethod('UsersService', 'Update')
-  update(data: UpdateUserDto): User {
-    return this.usersService.update(data)
+  async update(data: UpdateUserDto): Promise<User> {
+    return await this.usersService.update(data)
   }
 
   @GrpcMethod('UsersService', 'Remove')
-  remove({ id }: UserById): void {
-    this.usersService.remove(id)
+  async remove({ id }: UserById): Promise<void> {
+    await this.usersService.remove(id)
     return
   }
 }

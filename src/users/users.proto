@@ -34,13 +34,11 @@ message UpdateUserDto {
     string lastName = 4;
 }
 
-
 message UserById {
     int32 id = 1;
 }
 
 message Empty {}
-
 
 service UsersService{
     rpc Create(CreateUserDto) returns (User) {};

@@ -5,8 +5,6 @@ import { join } from 'path'
 import { ReflectionService } from '@grpc/reflection'
 
 async function bootstrap() {
-  // You can switch to a microservice with NestFactory.createMicroservice() as follows:
-
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {

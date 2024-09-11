@@ -15,9 +15,9 @@ export class PostsService {
     const mutation = `
     mutation CreatePost($createPostInput: CreatePostInput!) {
       createPost(createPostInput: $createPostInput) {
-        id,
-        title,
-        content,
+        id
+        title
+        content
         authorId
       }
     }`
@@ -35,10 +35,19 @@ export class PostsService {
         data: {
           createPost: Post
         }
-      }>(this.graphqlEndpoint, {
-        query: mutation,
-        variables
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query: mutation,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
     return response.data.data.createPost
@@ -47,40 +56,48 @@ export class PostsService {
   async findAll(): Promise<Post[]> {
     const query = `
     query {
-        posts {
+      posts {
         id
         title
         content
         authorId
-          }
-        }`
+      }
+    }`
 
     const response = await lastValueFrom(
       this.httpService.post<{
         data: {
           posts: Post[]
         }
-      }>(this.graphqlEndpoint, {
-        query
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query,
+          variables: {}
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
-    const posts = response.data.data.posts
-
-    return posts
+    return response.data.data.posts
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Post> {
     const query = `
-      query($id: Int!) {
-        post(id: $id) {
-          id
-          title
-          content
-          authorId
-        }
+    query($id: Int!) {
+      post(id: $id) {
+        id
+        title
+        content
+        authorId
       }
-    `
+    }`
+
     const variables = { id }
 
     const response = await lastValueFrom(
@@ -88,28 +105,35 @@ export class PostsService {
         data: {
           post: Post
         }
-      }>(this.graphqlEndpoint, {
-        query,
-        variables
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
-    const post = response.data.data.post
-
-    return post
+    return response.data.data.post
   }
 
   async update({ id, title, content }: UpdatePostDto): Promise<Post> {
     const mutation = `
-      mutation UpdatePost($updatePostInput: UpdatePostInput!){
-        updatePost(updatePostInput: $updatePostInput) {
-          id
-          title
-          content
-          authorId
-        }
+    mutation UpdatePost($updatePostInput: UpdatePostInput!) {
+      updatePost(updatePostInput: $updatePostInput) {
+        id
+        title
+        content
+        authorId
       }
-    `
+    }`
+
     const variables = {
       updatePostInput: {
         id,
@@ -123,10 +147,19 @@ export class PostsService {
         data: {
           updatePost: Post
         }
-      }>(this.graphqlEndpoint, {
-        query: mutation,
-        variables
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query: mutation,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
     return response.data.data.updatePost
@@ -134,26 +167,37 @@ export class PostsService {
 
   async remove(id: number): Promise<void> {
     const mutation = `
-      mutation RemovePost($removePostId: Int!) {
-        removePost(id: $removePostId) {
-          id
-          title
-          content
-          authorId
-        }
+    mutation RemovePost($removePostId: Int!) {
+      removePost(id: $removePostId) {
+        id
+        title
+        content
+        authorId
       }
-    `
+    }`
+
+    const variables = {
+      removePostId: id
+    }
+
     await lastValueFrom(
       this.httpService.post<{
         data: {
-          deletePost: { id: number }
+          removePost: { id: number }
         }
-      }>(this.graphqlEndpoint, {
-        query: mutation,
-        variables: {
-          removePostId: id
+      }>(
+        this.graphqlEndpoint,
+        {
+          query: mutation,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
         }
-      })
+      )
     )
 
     return

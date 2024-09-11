@@ -4,12 +4,12 @@ import { lastValueFrom } from 'rxjs'
 import { CreateUserDto } from './interfaces/create-user-dto.interface'
 import { UpdateUserDto } from './interfaces/update-user-dto.interface'
 import { User } from './interfaces/user.interface'
-//import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
   private readonly graphqlEndpoint = 'http://persistence-layer:3000/graphql'
   private readonly logger = new Logger(UsersService.name)
+  
   constructor(private readonly httpService: HttpService) {}
 
   async create({ email, firstName, lastName }: CreateUserDto) {
@@ -36,53 +36,62 @@ export class UsersService {
         data: {
           createUser: User
         }
-      }>(this.graphqlEndpoint, {
-        query: mutation,
-        variables
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query: mutation,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
     return response.data.data.createUser
   }
 
   async findAll(): Promise<User[]> {
-    this.logger.debug('Finding all users method');
+
     const query = `
-      query {
-        users {
+    query {
+      users {
+        id
+        email
+        firstName
+        lastName
+        posts {
           id
-          email
-          firstName
-          lastName
-          posts {
-            id
-            title
-            content
+          title
+          content
+        }
+      }
+    }`
+
+    const response = await lastValueFrom(
+      this.httpService.post<{
+        data: {
+          users: User[]
+        }
+      }>(
+        this.graphqlEndpoint,
+        {
+          query,
+          variables: {}
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           }
         }
-      }`;
+      )
+    )
 
-
-      const response = await lastValueFrom(
-        this.httpService.post<{
-          data: {
-            users: User[]
-          }
-        }>(
-          this.graphqlEndpoint,
-          {
-            query,
-            variables: {}
-          },
-          {
-            headers: { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            }
-          }
-        )
-      );
-      return response.data.data.users;
+    return response.data.data.users
   }
 
   async findOne(id: number): Promise<User> {
@@ -103,10 +112,19 @@ export class UsersService {
         data: {
           user: User
         }
-      }>(this.graphqlEndpoint, {
-        query,
-        variables
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
     return response.data.data.user
@@ -142,10 +160,19 @@ export class UsersService {
         data: {
           updateUser: User
         }
-      }>(this.graphqlEndpoint, {
-        query: mutation,
-        variables
-      })
+      }>(
+        this.graphqlEndpoint,
+        {
+          query: mutation,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }
+      )
     )
 
     return response.data.data.updateUser
@@ -162,17 +189,28 @@ export class UsersService {
       }
     }`
 
+    const variables = {
+      removeUserId: id
+    }
+
     await lastValueFrom(
       this.httpService.post<{
         data: {
           removeUser: { id: number }
         }
-      }>(this.graphqlEndpoint, {
-        query: mutation,
-        variables: {
-          removeUserId: id
+      }>(
+        this.graphqlEndpoint,
+        {
+          query: mutation,
+          variables
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
         }
-      })
+      )
     )
 
     return

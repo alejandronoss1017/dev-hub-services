@@ -15,7 +15,7 @@ async function bootstrap() {
           join(__dirname, '../src/users/users.proto'),
           join(__dirname, '../src/posts/posts.proto')
         ],
-        url: '0.0.0.0:5000',
+        url: 'business-logic-layer:5000',
         onLoadPackageDefinition: (pkg, server) => {
           new ReflectionService(pkg).addToServer(server)
         }

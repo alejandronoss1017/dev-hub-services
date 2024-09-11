@@ -7,7 +7,7 @@ import { lastValueFrom } from 'rxjs'
 
 @Injectable()
 export class PostsService {
-  private readonly graphqlEndpoint = 'http://localhost:3000/graphql'
+  private readonly graphqlEndpoint = 'persistence-layer/graphql'
 
   constructor(private readonly httpService: HttpService) {}
 

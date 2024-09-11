@@ -8,7 +8,7 @@ import { User } from './interfaces/user.interface'
 
 @Injectable()
 export class UsersService {
-  private readonly graphqlEndpoint = 'http://localhost:3000/graphql'
+  private readonly graphqlEndpoint = 'persistence-layer/graphql'
   private readonly logger = new Logger(UsersService.name);
   constructor(private readonly httpService: HttpService) {}
 

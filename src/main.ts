@@ -12,16 +12,19 @@ async function bootstrap() {
       options: {
         package: ['users', 'posts'],
         protoPath: [
-          join(__dirname, 'users/users.proto'),
-          join(__dirname, 'posts/posts.proto')
+          join(__dirname, '../src/users/users.proto'),
+          join(__dirname, '../src/posts/posts.proto')
         ],
+        url: '0.0.0.0:5000',
         onLoadPackageDefinition: (pkg, server) => {
           new ReflectionService(pkg).addToServer(server)
         }
       }
     }
   )
-  await app.listen()
+  await app.listen().catch(err => {
+    console.error('Error while starting the GRPC server:', err);
+  });
 }
 
 bootstrap()

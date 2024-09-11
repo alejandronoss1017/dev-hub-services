@@ -1,4 +1,4 @@
-import { Post } from "src/posts/interfaces/post.interface"
+import { Post } from 'src/posts/interfaces/post.interface'
 
 export interface User {
   id: number

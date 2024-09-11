@@ -9,10 +9,10 @@ import { User } from './interfaces/user.interface'
 @Injectable()
 export class UsersService {
   private readonly graphqlEndpoint = 'http://persistence-layer:3000/graphql'
-  private readonly logger = new Logger(UsersService.name);
+  private readonly logger = new Logger(UsersService.name)
   constructor(private readonly httpService: HttpService) {}
 
-  async create({ email, firstName, lastName }: CreateUserDto){
+  async create({ email, firstName, lastName }: CreateUserDto) {
     const mutation = `
     mutation CreateUser($createUserInput: CreateUserInput!) {
       createUser(createUserInput: $createUserInput) {
@@ -45,10 +45,9 @@ export class UsersService {
     return response.data.data.createUser
   }
 
-    async findAll(): Promise<User[]> {
-      this.logger.debug('Finding all users method');
-      
-      const query = `
+  async findAll(): Promise<User[]> {
+    this.logger.debug('Finding all users method');
+    const query = `
       query {
         users {
           id
@@ -62,38 +61,29 @@ export class UsersService {
           }
         }
       }`;
-    
-      this.logger.log('GraphQL Query:', query);
-    
-      try {
-        // Network connectivity check
-        await this.httpService.get(this.graphqlEndpoint).toPromise();
-        this.logger.debug('Network connectivity check passed');
-    
-        const response = await lastValueFrom(
-          this.httpService.post<{
-            data: {
-              users: User[]
-            }
-          }>(this.graphqlEndpoint, {
+
+
+      const response = await lastValueFrom(
+        this.httpService.post<{
+          data: {
+            users: User[]
+          }
+        }>(
+          this.graphqlEndpoint,
+          {
             query,
-            timeout: 5000 // Increase timeout to 5 seconds
-          })
-        );
-    
-        this.logger.log('GraphQL Response:', response.data);
-        return response.data.data.users;
-      } catch (error) {
-        this.logger.error('Error while fetching users:', error.message);
-        this.logger.error('Full error object:', JSON.stringify(error));
-        if (error.response) {
-          this.logger.error('Error response data:', JSON.stringify(error.response.data));
-          this.logger.error('Error response status:', error.response.status);
-          this.logger.error('Error response headers:', JSON.stringify(error.response.headers));
-        }
-        throw error;
-      }
-    }
+            variables: {}
+          },
+          {
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            }
+          }
+        )
+      );
+      return response.data.data.users;
+  }
 
   async findOne(id: number): Promise<User> {
     const query = `
@@ -122,7 +112,12 @@ export class UsersService {
     return response.data.data.user
   }
 
-  async update({ id, email, firstName, lastName }: UpdateUserDto): Promise<User> {
+  async update({
+    id,
+    email,
+    firstName,
+    lastName
+  }: UpdateUserDto): Promise<User> {
     const mutation = `
     mutation UpdateUser($updateUserInput: UpdateUserInput!) {
       updateUser(updateUserInput: $updateUserInput) {

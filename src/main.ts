@@ -22,9 +22,9 @@ async function bootstrap() {
       }
     }
   )
-  await app.listen().catch(err => {
-    console.error('Error while starting the GRPC server:', err);
-  });
+  await app.listen().catch((err) => {
+    console.error('Error while starting the GRPC server:', err)
+  })
 }
 
 bootstrap()

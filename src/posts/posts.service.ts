@@ -110,11 +110,11 @@ export class PostsService {
         }
       }
     `
-    const variables = { 
+    const variables = {
       updatePostInput: {
-        id, 
-        title, 
-        content 
+        id,
+        title,
+        content
       }
     }
 

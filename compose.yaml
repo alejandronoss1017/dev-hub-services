@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # Business Logic Layer (From GitHub)
+  business-logic-layer:
+    container_name: business-layer
+    build:
+      context: .
+    ports:
+      - "5000:5000"
+
+  # Persistence Layer (From GitHub)
+  persistence-layer:
+    container_name: persistence-layer
+    build:
+      context: https://github.com/alejandronoss1017/dev-hub-data.git#develop
+      args:
+        - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}

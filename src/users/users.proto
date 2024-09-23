@@ -1,0 +1,49 @@
+syntax="proto3";
+
+package users;
+
+message Post {
+    int32 id = 1;
+    string title = 2;
+    string content = 3;
+    int32 authorId = 4;
+}
+
+message User {
+    int32 id = 1;
+    string email = 2;
+    string firstName = 3;
+    string lastName = 4;
+    repeated Post posts = 5;
+}
+
+message Users {
+    repeated User users = 1;
+}
+
+message CreateUserDto {
+    string email = 1;
+    string firstName = 2;
+    string lastName = 3;
+}
+
+message UpdateUserDto {
+    int32 id = 1;
+    string email = 2;
+    string firstName = 3;
+    string lastName = 4;
+}
+
+message UserById {
+    int32 id = 1;
+}
+
+message Empty {}
+
+service UsersService{
+    rpc Create(CreateUserDto) returns (User) {};
+    rpc FindAll(Empty) returns (Users) {};
+    rpc FindOne(UserById) returns (User) {};
+    rpc Update(UpdateUserDto) returns (User) {};
+    rpc Remove(UserById) returns (Empty) {};
+}
